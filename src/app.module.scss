@@ -1,0 +1,20 @@
+@import './constants/constants.scss';
+
+.app {
+  .head {
+    width: 100%;
+    // max-width: $app-max-width;
+    height: 108px;
+    position: fixed;
+    // left: calc((100% - #{$app-max-width}) / 2);
+    z-index: -1;
+    background-color: $color-primary;
+  }
+
+  > .main {
+    padding-top: $margin-top;
+
+    max-width: $app-max-width;
+    margin: 0 auto;
+  }
+}

@@ -1,0 +1,38 @@
+@import '../constants/constants.scss';
+
+.layout {
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - #{$margin-top}* 2);
+  border: 1px solid $color-primary;
+
+  .side {
+    width: 35%;
+    border-right: 1px solid $color-border;
+
+    .head {
+      height: $height-headbar;
+      width: 100%;
+      margin-bottom: 2px;
+    }
+
+    .chatList {
+      height: calc(100vh - (#{$margin-top}* 2 + #{$height-headbar} + 1px));
+      overflow-y: auto;
+    }
+  }
+
+  .main {
+    width: 65%;
+
+    .chatHead {
+      height: 75px;
+    }
+
+    .chatDetail {
+      height: calc(100vh - (#{$margin-top}* 2 + 75px));
+
+      overflow-y: auto;
+    }
+  }
+}
