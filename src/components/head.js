@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './head.module.scss'
 import Headbar from '../components/headbar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -6,7 +6,8 @@ import { faBars, faSearch, faArrowLeft } from '@fortawesome/free-solid-svg-icons
 
 export default function Head() {
     const [mode, setMode] = useState('chatList');
-
+    const [text, setText] = useState('');
+    const searchInput = useRef(null);
 
     function handleMenubarIcon() {
         setMode(mode === 'chatList' ? 'contacts' : 'chatList');
@@ -14,6 +15,16 @@ export default function Head() {
 
     function handleSeachIcon() {
         setMode('search');
+        // searchInput.current.focus();    ??
+    }
+
+    useEffect(() => {
+        if (mode === 'search')
+            searchInput.current.focus();
+    }, [mode])
+
+    function handleInputChange(e) {
+        setText(e.target.value);
     }
 
     return (
@@ -21,20 +32,20 @@ export default function Head() {
             <Headbar
                 first={
                     <FontAwesomeIcon
-                        icon={mode === 'chatList' ? faBars : faArrowLeft}
+                        icon={mode === 'search' ? faArrowLeft : faBars}
                         size='lg'
                         onClick={handleMenubarIcon}
                     />
                 }
 
                 middle={
-                    mode === 'chatList' ?
-                        'My Messenger' :
-                        <input type="text" placeholder='search' />
+                    mode === 'search' ?
+                        <input type="text" placeholder='search' value={text} onChange={e => handleInputChange(e)} ref={searchInput} /> :
+                        'My Messenger'
                 }
 
                 last={
-                    mode === 'chatList' &&
+                    mode !== 'search' &&
                     <FontAwesomeIcon icon={faSearch} size='lg' onClick={handleSeachIcon} />
                 }
             />

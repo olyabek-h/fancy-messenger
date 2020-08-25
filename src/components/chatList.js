@@ -4,7 +4,7 @@ import styles from './chatList.module.scss'
 export default function ChatList({ children }) {
 
     return (
-        <div className={styles['chatItem']}>
+        <div className={styles['chatList']}>
             {children}
         </div>
     )

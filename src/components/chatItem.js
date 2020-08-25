@@ -1,15 +1,19 @@
 import React from 'react';
 import styles from './chatItem.module.scss'
+import Avatar from './avatar'
 
-export default function ChatItem({name, avatar, lastMessage, time, unreadMessageCount}) {
+export default function ChatItem({ name, avatar, lastMessage, time, unreadMessageCount, selected }) {
 
     return (
-        <div className={styles['chatItem']}>
-                <img className={styles['avatar']} src={avatar} alt="name"/>
-                <span className={styles['name']}>{name}</span>
-                <span className={styles['time']}>{time}</span>
-                <span className={styles['lastMessage']}>{lastMessage}</span>                
-                <span className={styles['unreadMessageCount']}>{unreadMessageCount}</span>
+        // <div className={styles[!!selected ? 'chatItem selected' : 'chatItem']}>
+        <div className={styles['chatItem'] + ' ' + styles[!!selected ? 'selected' : '']}>
+            <div className={styles['avatar']}>
+                <Avatar src={avatar} alt={name} />
+            </div>
+            <span className={styles['name']}>{name}</span>
+            <span className={styles['time']}>{time}</span>
+            <span className={styles['lastMessage']}>{lastMessage}</span>
+            <span className={styles['unreadMessageCount']}>{unreadMessageCount}</span>
         </div>
     )
 }

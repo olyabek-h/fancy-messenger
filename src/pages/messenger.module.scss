@@ -13,7 +13,6 @@
     .head {
       height: $height-headbar;
       width: 100%;
-      margin-bottom: 2px;
     }
 
     .chatList {
@@ -24,15 +23,5 @@
 
   .main {
     width: 65%;
-
-    .chatHead {
-      height: 75px;
-    }
-
-    .chatDetail {
-      height: calc(100vh - (#{$margin-top}* 2 + 75px));
-
-      overflow-y: auto;
-    }
   }
 }

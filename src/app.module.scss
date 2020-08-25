@@ -4,7 +4,7 @@
   .head {
     width: 100%;
     // max-width: $app-max-width;
-    height: 108px;
+    height: $height-head ;
     position: fixed;
     // left: calc((100% - #{$app-max-width}) / 2);
     z-index: -1;
