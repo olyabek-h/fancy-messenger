@@ -2,11 +2,11 @@ import React from 'react';
 import styles from './chatItem.module.scss'
 import Avatar from './avatar'
 
-export default function ChatItem({ name, avatar, lastMessage, time, unreadMessageCount, selected }) {
+export default function ChatItem({ name, avatar, lastMessage, time, unreadMessageCount, selected, onSelect }) {
 
     return (
         // <div className={styles[!!selected ? 'chatItem selected' : 'chatItem']}>
-        <div className={styles['chatItem'] + ' ' + styles[!!selected ? 'selected' : '']}>
+        <div onClick={onSelect} className={styles['chatItem'] + ' ' + styles[!!selected ? 'selected' : '']}>
             <div className={styles['avatar']}>
                 <Avatar src={avatar} alt={name} />
             </div>

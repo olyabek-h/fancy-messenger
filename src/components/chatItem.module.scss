@@ -7,7 +7,7 @@
     height: 5rem;
     border-bottom: 1px solid $color-border;
     cursor: pointer;
-    
+
     // &.selected {                                   ???
     //     background-color: $color-selected;
     // }
@@ -16,7 +16,7 @@
         background-color: $color-border;
         transition: ease-out 1s;
     }
-    
+
     &.selected {
         background-color: $color-selected;
     }
@@ -37,6 +37,8 @@
         font-weight: 600;
         color: gray;
         padding-left: 10px;
+        white-space: nowrap;
+        overflow: hidden;
     }
 
     .time {
