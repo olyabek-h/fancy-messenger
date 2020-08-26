@@ -5,7 +5,7 @@ import ChatList from '../components/chatList'
 import ChatItem from '../components/chatItem'
 import ChatBox from '../components/chatBox'
 import { INIT_STATE, reducer } from '../stateManager/reducer'
-import { chatSelected } from '../stateManager/actionCreator'
+import { chatSelected, messageSubmitted, chatBoxClosed } from '../stateManager/actionCreator'
 
 export default function Messenger() {
   const [{ userId, chatList, messages, selectedChatId }, dispatch] = useReducer(reducer, INIT_STATE)
@@ -13,8 +13,16 @@ export default function Messenger() {
   const selectedChatInfo = chatList.filter(chat => chat.id === selectedChatId)[0];
   const selectedChatMessages = messages.filter(x => x.chatId === selectedChatId);
 
-  const handleChatSelect = id => {
+  function handleChatSelect(id) {
     dispatch(chatSelected(id));
+  }
+
+  function handleSubmitMessage(text) {
+    dispatch(messageSubmitted(text));
+  }
+
+  function handleCloseChatBox() {
+    dispatch(chatBoxClosed());
   }
 
   return (
@@ -46,6 +54,9 @@ export default function Messenger() {
           <ChatBox
             avatar={selectedChatInfo.avatar}
             name={selectedChatInfo.name}
+            onSubmitMessage={handleSubmitMessage}
+            selectedChatId={selectedChatId}
+            onClose={handleCloseChatBox}
             messages={
               selectedChatMessages.map(message => (
                 {

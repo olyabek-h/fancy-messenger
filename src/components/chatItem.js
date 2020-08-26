@@ -13,7 +13,7 @@ export default function ChatItem({ name, avatar, lastMessage, time, unreadMessag
             <span className={styles['name']}>{name}</span>
             <span className={styles['time']}>{time}</span>
             <span className={styles['lastMessage']}>{lastMessage}</span>
-            <span className={styles['unreadMessageCount']}>{unreadMessageCount}</span>
+            {!!unreadMessageCount && <span className={styles['unreadMessageCount']}>{unreadMessageCount}</span>}
         </div>
     )
 }

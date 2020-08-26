@@ -7,7 +7,7 @@ import { faBars, faSearch, faArrowLeft } from '@fortawesome/free-solid-svg-icons
 export default function Head() {
     const [mode, setMode] = useState('chatList');
     const [text, setText] = useState('');
-    const searchInput = useRef(null);
+    const input = useRef(null);
 
     function handleMenubarIcon() {
         setMode(mode === 'chatList' ? 'contacts' : 'chatList');
@@ -15,12 +15,12 @@ export default function Head() {
 
     function handleSeachIcon() {
         setMode('search');
-        // searchInput.current.focus();    ??
+        // input.current.focus();               //  1   focus
     }
 
     useEffect(() => {
         if (mode === 'search')
-            searchInput.current.focus();
+            input.current.focus();              //  1   focus
     }, [mode])
 
     function handleInputChange(e) {
@@ -40,7 +40,13 @@ export default function Head() {
 
                 middle={
                     mode === 'search' ?
-                        <input type="text" placeholder='search' value={text} onChange={e => handleInputChange(e)} ref={searchInput} /> :
+                        <input
+                            type="text"
+                            placeholder='search'
+                            value={text}
+                            onChange={e => handleInputChange(e)}
+                            ref={input}
+                        /> :
                         'My Messenger'
                 }
 
