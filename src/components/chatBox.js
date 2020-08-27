@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import styles from './chatBox.module.scss'
 import Headbar from './headbar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faEllipsisV, faPaperclip, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import Avatar from './avatar'
+import { useKeyboard } from '../hooks/myHooks'
 
 export default function ChatBox({ avatar, name, messages, onSubmitMessage, selectedChatId, onClose }) {
     const [text, setText] = useState('');
@@ -22,17 +23,28 @@ export default function ChatBox({ avatar, name, messages, onSubmitMessage, selec
         }
     }
 
-    function handleKeyUp(e) {
-        if (e.keyCode === 13)
-            handleSubmitMessage();
-        else if (e.keyCode === 27)          //  ?   4   close
-            onClose();
-    }
-
     // useEffect(() => {                    //  ?   3   focus
     //     if (text === '')
     //         input.current.focus()
     // }, [text])
+
+    function handleKeyDown(e) {
+        if (e.keyCode === 13)
+            handleSubmitMessage();
+    }
+
+    // function handleEsc(e) {          //  6   
+    //     if (e.keyCode === 27)
+    //         onClose();
+    // }
+    const handleEsc = useCallback(      //  6
+        (e) => {
+            if (e.keyCode === 27)
+                onClose();
+        },
+        [onClose],
+    );
+    useKeyboard('keydown', handleEsc, [onClose]);
 
     useEffect(() => {
         input.current.focus();
@@ -76,7 +88,7 @@ export default function ChatBox({ avatar, name, messages, onSubmitMessage, selec
                         type='text'
                         value={text}
                         onChange={e => handleInputChange(e)}
-                        onKeyUp={e => handleKeyUp(e)}
+                        onKeyDown={e => handleKeyDown(e)}
                         ref={input}
                     />
                     <FontAwesomeIcon

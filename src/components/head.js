@@ -1,16 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import styles from './head.module.scss'
 import Headbar from '../components/headbar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars, faSearch, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { useKeyboard } from '../hooks/myHooks'
 
-export default function Head() {
+export default function Head({ onKeywordChange }) {
     const [mode, setMode] = useState('chatList');
-    const [text, setText] = useState('');
+    // const [text, setText] = useState('');    //  5
     const input = useRef(null);
 
     function handleMenubarIcon() {
         setMode(mode === 'chatList' ? 'contacts' : 'chatList');
+        onKeywordChange('');                    //  5   cause uncontrolled input
     }
 
     function handleSeachIcon() {
@@ -24,8 +26,32 @@ export default function Head() {
     }, [mode])
 
     function handleInputChange(e) {
-        setText(e.target.value);
+        // setText(e.target.value);             //  5
+        onKeywordChange(e.target.value);
     }
+
+    // function hadnleKeyDown(e) {                      //  6
+    //     if (mode !== 'search' && e.ctrlKey && (e.key === 'f' || e.key === 'F')) {
+    //         e.preventDefault();
+    //         handleSeachIcon();  // setMode('search');       //  ?   4
+    //     }
+    //     else if (mode === 'search' && e.keyCode === 27) {
+    //         handleMenubarIcon();    // setMode(mode === 'chatList' ? 'contacts' : 'chatList');  //  ?   4
+    //     }
+    // }
+    const hadnleKeyDown = useCallback(                  //  6
+        (e) => {
+            if (mode !== 'search' && e.ctrlKey && (e.key === 'f' || e.key === 'F')) {
+                e.preventDefault();
+                handleSeachIcon();  // setMode('search');       //  ?   4
+            }
+            else if (mode === 'search' && e.keyCode === 27) {
+                handleMenubarIcon();    // setMode(mode === 'chatList' ? 'contacts' : 'chatList');  //  ?   4
+            }
+        },
+        [mode, handleMenubarIcon],
+    );
+    useKeyboard('keydown', hadnleKeyDown, [mode])
 
     return (
         <div className={styles['head']}>
@@ -43,9 +69,9 @@ export default function Head() {
                         <input
                             type="text"
                             placeholder='search'
-                            value={text}
-                            onChange={e => handleInputChange(e)}
+                            // value={text}         //  5
                             ref={input}
+                            onChange={handleInputChange}
                         /> :
                         'My Messenger'
                 }
