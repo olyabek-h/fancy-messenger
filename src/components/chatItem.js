@@ -5,7 +5,6 @@ import Avatar from './avatar'
 export default function ChatItem({ name, avatar, lastMessage, time, unreadMessageCount, selected, onSelect }) {
 
     return (
-        // <div className={styles[!!selected ? 'chatItem selected' : 'chatItem']}>
         <div onClick={onSelect} className={styles['chatItem'] + ' ' + styles[!!selected ? 'selected' : '']}>
             <div className={styles['avatar']}>
                 <Avatar src={avatar} alt={name} />

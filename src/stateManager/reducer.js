@@ -15,6 +15,7 @@ export const INIT_STATE = {
         { id: 5, chatId: 2, userId: 1, time: '11:42', text: 'It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here' },
     ],
     selectedChatId: null,
+    searchedKeyword: '',
 }
 
 export function reducer(state, action) {
@@ -25,6 +26,7 @@ const ACTION_HANDLERS = {
     [ACTIONS.CHAT_SELECTED]: handleChatSelected,
     [ACTIONS.MESSAGE_SUBMITTED]: handleMessageSubmitted,
     [ACTIONS.CHAT_BOX_CLOSED]: handleChatBoxClosed,
+    [ACTIONS.KEYWORD_SEARCHED]: handleKeywordSearched,
 }
 
 function handleChatSelected(state, payload) {
@@ -35,7 +37,7 @@ function handleChatSelected(state, payload) {
         selectedChatId: payload,
         chatlist: [
             ...state.chatList.splice(selectedChatIndex, 1, modifiedSelectedChat)
-        ]
+        ],
     }
 }
 
@@ -59,5 +61,12 @@ function handleChatBoxClosed(state) {
     return {
         ...state,
         selectedChatId: null,
+    }
+}
+
+function handleKeywordSearched(state, payload) {
+    return {
+        ...state,
+        searchedKeyword: payload,
     }
 }

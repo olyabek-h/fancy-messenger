@@ -1,15 +1,16 @@
-import React, { useReducer, useState } from 'react'
+import React from 'react'
 import styles from './messenger.module.scss'
 import Head from '../components/head'
 import ChatList from '../components/chatList'
 import ChatItem from '../components/chatItem'
 import ChatBox from '../components/chatBox'
-import { INIT_STATE, reducer } from '../stateManager/reducer'
-import { chatSelected, messageSubmitted, chatBoxClosed } from '../stateManager/actionCreator'
+import { chatSelected, messageSubmitted, chatBoxClosed, keywordSearched } from '../stateManager/actionCreator'
+import { useAppState } from '../context/appStateContext'
+import { useDispatch } from '../context/dispatchContext'
 
 export default function Messenger() {
-  const [{ userId, chatList, messages, selectedChatId }, dispatch] = useReducer(reducer, INIT_STATE)
-  const [keywordSearch, setKeywordSearch] = useState('');
+  const { userId, chatList, messages, selectedChatId, searchedKeyword } = useAppState();
+  const dispatch = useDispatch();
 
   const selectedChatInfo = chatList.filter(chat => chat.id === selectedChatId)[0];
   const selectedChatMessages = messages.filter(x => x.chatId === selectedChatId);
@@ -27,7 +28,7 @@ export default function Messenger() {
   }
 
   function handleChatListSearch(keyword) {
-    setKeywordSearch(keyword);
+    dispatch(keywordSearched(keyword))
   }
 
   return (
@@ -39,7 +40,7 @@ export default function Messenger() {
         <div className={styles['chatList']}>
           <ChatList>
             {chatList
-              .filter(x => x.name.toLowerCase().includes(keywordSearch.toLocaleLowerCase()))
+              .filter(x => x.name.toLowerCase().includes(searchedKeyword.toLocaleLowerCase()))
               .map(chat => {
                 const chatMessages = messages.filter(x => x.chatId === chat.id);
                 const lastMessage = chatMessages[chatMessages.length - 1];

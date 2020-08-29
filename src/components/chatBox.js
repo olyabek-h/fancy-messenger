@@ -49,8 +49,12 @@ export default function ChatBox({ avatar, name, messages, onSubmitMessage, selec
     useEffect(() => {
         input.current.focus();
         lastMessage.current.scrollIntoView();
-    }, [selectedChatId, messages])
-
+    }, [selectedChatId])
+    
+    useEffect(() => {
+        lastMessage.current.scrollIntoView();
+    }, [messages])
+    
     return (
         <div className={styles['chatBox']}>
             <div className={styles['chatHead']}>
