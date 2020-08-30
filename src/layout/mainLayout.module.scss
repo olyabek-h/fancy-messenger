@@ -1,12 +1,13 @@
-@import './constants/constants.scss';
+@import '../constants/constants.scss';
 
 .app {
+  // background-color: #d2dbdb;     //  8
+  // z-index: -200;                 //  8
+
   .head {
     width: 100%;
-    // max-width: $app-max-width;
-    height: $height-head ;
+    height: $height-head;
     position: fixed;
-    // left: calc((100% - #{$app-max-width}) / 2);
     z-index: -1;
     background-color: $color-primary;
   }

@@ -5,6 +5,7 @@
   flex-direction: row;
   height: calc(100vh - #{$margin-top}* 2);
   border: 1px solid $color-primary;
+  background-color: white;
 
   .side {
     width: 35%;

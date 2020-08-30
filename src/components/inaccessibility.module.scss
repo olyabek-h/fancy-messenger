@@ -1,0 +1,21 @@
+@import '../constants/constants.scss';
+
+.inaccessibility {
+    display: flex;
+    max-width: $max-width-secondary;
+    height: calc(100vh - #{$margin-top} - #{$margin-top} - #{$margin-inside} - #{$margin-inside});
+    margin: $margin-inside auto;
+    box-shadow: 0 17px 50px 0 rgba(0, 0, 0, 0.19), 0 12px 15px 0 rgba(0, 0, 0, 0.24);
+    background-color: whitesmoke;
+
+    .layout {
+        display: flex;
+        flex-direction: column;
+        justify-self: center;
+        align-self: center;
+        margin: auto;
+        p{
+            font-size: 30px;
+        }
+    }
+}
