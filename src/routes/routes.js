@@ -1,10 +1,10 @@
 import Login from '../pages/login'
-import Messenger from '../pages/messenger'
+import Chat from '../pages/chat'
 
 export const ROUTES = [
     {
-        path: '/messenger',
-        component: Messenger,
+        path: '/chat',
+        component: Chat,
         private: true,
     },
     {

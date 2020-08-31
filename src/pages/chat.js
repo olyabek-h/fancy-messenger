@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './messenger.module.scss'
+import styles from './chat.module.scss'
 import Head from '../components/head'
 import ChatList from '../components/chatList'
 import ChatItem from '../components/chatItem'
@@ -8,7 +8,7 @@ import { chatSelected, messageSubmitted, chatBoxClosed, keywordSearched } from '
 import { useAppState } from '../context/appStateContext'
 import { useDispatch } from '../context/dispatchContext'
 
-export default function Messenger() {
+export default function Chat() {
   const { userId, chatList, messages, selectedChatId, searchedKeyword } = useAppState();
   const dispatch = useDispatch();
 

@@ -5,7 +5,8 @@ import { INIT_STATE, reducer } from './stateManager/reducer'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import { ROUTES } from './routes/routes'
 import MainLayout from './layout/mainLayout'
-import Inaccessibility from './components/inaccessibility'
+import SecondaryLayout from './layout/secondaryLayout'
+import Inaccessibility from './pages/inaccessibility'
 
 function App() {
   const [state, dispatch] = useReducer(reducer, INIT_STATE)
@@ -24,7 +25,10 @@ function App() {
                     path={item.path}
                     render={() => (
                       <MainLayout
-                        Component={isAuthenticated ? item.component : Inaccessibility}
+                        Component={isAuthenticated ?
+                          item.component :
+                          () => <SecondaryLayout Component={Inaccessibility} />
+                        }
                       />
                     )}
                   />
@@ -37,7 +41,7 @@ function App() {
                     path={item.path}
                     render={() => (
                       <MainLayout
-                        Component={item.component}
+                        Component={() => <SecondaryLayout Component={item.component} />}
                       />
                     )}
 
