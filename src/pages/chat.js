@@ -1,15 +1,16 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from './chat.module.scss'
 import Head from '../components/head'
 import ChatList from '../components/chatList'
 import ChatItem from '../components/chatItem'
 import ChatBox from '../components/chatBox'
-import { chatSelected, messageSubmitted, chatBoxClosed } from '../stateManager/actionCreator'
+import { chatSelected, messageSubmitted, chatBoxClosed, contactsLoaded, chatListLoaded } from '../stateManager/actionCreator'
 import { useAppState } from '../context/appStateContext'
 import { useDispatch } from '../context/dispatchContext'
+import { loadContacts, loadRecentChats } from '../services/services'
 
 export default function Chat() {
-  const { userId, chatList, messages, selectedChatId, searchedKeyword } = useAppState();
+  const { userId, chatList, messages, selectedChatId, searchedKeyword, contacts } = useAppState();
   const dispatch = useDispatch();
 
   const selectedChatInfo = chatList.filter(chat => chat.id === selectedChatId)[0];
@@ -26,6 +27,20 @@ export default function Chat() {
   function handleCloseChatBox() {
     dispatch(chatBoxClosed());
   }
+
+  useEffect(
+    () => {
+      loadContacts(userId)
+        .then(data => {
+          dispatch(contactsLoaded(data))
+        })
+
+      loadRecentChats(userId)
+        .then(data => {
+          dispatch(chatListLoaded(data))
+        })
+    }, [userId]
+  )
 
   return (
     <div className={styles['layout']}>

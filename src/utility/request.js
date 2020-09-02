@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:4000';     //process.env.REACT_APP_API_URL;
+const baseUrl = process.env.REACT_APP_API_URL || 'http://localhost:4000';
 
 export function get(url) {
     return new Promise(resolve => {
@@ -13,12 +13,11 @@ export function get(url) {
       fetch(`${baseUrl}/${url}`, {
         method: 'POST',
         headers: {
-          'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
       })
-        .then(x => x.json())
+        .then(response => response.json())
         .then(resolve);
     });
   }

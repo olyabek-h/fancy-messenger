@@ -21,29 +21,21 @@ export default function Login() {
     }, [])
 
     function handleSignIn() {
-        if (username !== '') {   // TODO: other validation must check here.
+        // TODO: other validation must check here.
+        if (username !== '') {
             signIn(username)
                 .then(({ success, result: user }) => {
                     //  TODO: handle failure.
-                    dispatch(userSignedIn(user));
+                    if (success)
+                        dispatch(userSignedIn(user));
                 })
         }
     }
 
     function handleKeyDown(e) {
         if (e.keyCode === 13)
-        handleSignIn();
+            handleSignIn();
     }
-
-    // const handleEnter = useCallback(
-    //     (e) => {
-    //         if (e.keyCode === 13)
-    //             handleSignIn();
-    //     },
-    //     [],
-    // );
-    // useKeyboard('keydown', handleEnter, [])
-
 
     useEffect(() => {
         if (userId)
