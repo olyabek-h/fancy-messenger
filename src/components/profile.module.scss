@@ -1,0 +1,27 @@
+@import '../constants/constants.scss';
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-right: 1px solid $color-border;
+
+    .top {
+        height: $height-headbar;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: xx-large;
+        span {
+            margin-left: 2rem;
+        }
+    }
+
+    .bottom {
+        display: flex;
+        flex-grow: 1;        
+        margin: 2px;
+        background-color: #00bfa5;
+    }
+}

@@ -8,17 +8,13 @@
     border-bottom: 1px solid $color-border;
     cursor: pointer;
 
-    // &.selected {                                 //  ?   2   before or after &:hover
-    //     background-color: $color-selected;
-    // }
+    &.selected {
+        background-color: $color-selected;
+    }
 
     &:hover {
         background-color: $color-border;
         transition: ease-out 1s;
-    }
-
-    &.selected {
-        background-color: $color-selected;          //  ?   2   before or after &:hover
     }
 
     .avatar {

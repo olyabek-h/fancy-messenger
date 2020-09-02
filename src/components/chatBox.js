@@ -4,7 +4,7 @@ import Headbar from './headbar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faEllipsisV, faPaperclip, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import Avatar from './avatar'
-import { useKeyboard } from '../hooks/myHooks'
+import { useKeyboard } from '../hooks/customHooks'
 
 export default function ChatBox({ avatar, name, messages, onSubmitMessage, selectedChatId, onClose }) {
     const [text, setText] = useState('');
@@ -19,14 +19,9 @@ export default function ChatBox({ avatar, name, messages, onSubmitMessage, selec
         if (text !== '') {
             onSubmitMessage(text);
             setText('');
-            input.current.focus();              //  ?   3   focus
+            input.current.focus();
         }
     }
-
-    // useEffect(() => {                    //  ?   3   focus
-    //     if (text === '')
-    //         input.current.focus()
-    // }, [text])
 
     function handleKeyDown(e) {
         if (e.keyCode === 13)
@@ -50,11 +45,11 @@ export default function ChatBox({ avatar, name, messages, onSubmitMessage, selec
         input.current.focus();
         lastMessage.current.scrollIntoView();
     }, [selectedChatId])
-    
+
     useEffect(() => {
         lastMessage.current.scrollIntoView();
     }, [messages])
-    
+
     return (
         <div className={styles['chatBox']}>
             <div className={styles['chatHead']}>

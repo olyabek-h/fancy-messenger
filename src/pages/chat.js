@@ -4,7 +4,7 @@ import Head from '../components/head'
 import ChatList from '../components/chatList'
 import ChatItem from '../components/chatItem'
 import ChatBox from '../components/chatBox'
-import { chatSelected, messageSubmitted, chatBoxClosed, keywordSearched } from '../stateManager/actionCreator'
+import { chatSelected, messageSubmitted, chatBoxClosed } from '../stateManager/actionCreator'
 import { useAppState } from '../context/appStateContext'
 import { useDispatch } from '../context/dispatchContext'
 
@@ -27,15 +27,11 @@ export default function Chat() {
     dispatch(chatBoxClosed());
   }
 
-  function handleChatListSearch(keyword) {
-    dispatch(keywordSearched(keyword))
-  }
-
   return (
     <div className={styles['layout']}>
       <div className={styles['side']}>
         <div className={styles['head']}>
-          <Head onKeywordChange={handleChatListSearch} />
+          <Head />
         </div>
         <div className={styles['chatList']}>
           <ChatList>

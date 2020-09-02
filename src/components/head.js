@@ -3,58 +3,65 @@ import styles from './head.module.scss'
 import Headbar from '../components/headbar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars, faSearch, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-import { useKeyboard } from '../hooks/myHooks'
+import { useKeyboard } from '../hooks/customHooks'
+import Drawer from './drawer'
+import Profile from './profile'
+import { useAppState } from '../context/appStateContext'
+import { useDispatch } from '../context/dispatchContext'
+import { keywordSearched } from '../stateManager/actionCreator'
 
-export default function Head({ onKeywordChange }) {
+export default function Head() {
     const [mode, setMode] = useState('chatList');
-    // const [text, setText] = useState('');    //  5
     const input = useRef(null);
-
-    function handleMenubarIcon() {
-        setMode(mode === 'chatList' ? 'contacts' : 'chatList');
-        onKeywordChange('');                    //  5   cause uncontrolled input
-    }
+    const { name, searchedKeyword, contacts } = useAppState();
+    const dispatch = useDispatch();
 
     function handleSeachIcon() {
         setMode('search');
-        // input.current.focus();               //  1   focus
     }
 
     useEffect(() => {
         if (mode === 'search')
-            input.current.focus();              //  1   focus
+            input.current.focus();
     }, [mode])
 
     function handleInputChange(e) {
-        // setText(e.target.value);             //  5
-        onKeywordChange(e.target.value);
+        dispatch(keywordSearched(e.target.value))
     }
 
-    // function hadnleKeyDown(e) {                      //  6
-    //     if (mode !== 'search' && e.ctrlKey && (e.key === 'f' || e.key === 'F')) {
-    //         e.preventDefault();
-    //         handleSeachIcon();  // setMode('search');       //  ?   4
-    //     }
-    //     else if (mode === 'search' && e.keyCode === 27) {
-    //         handleMenubarIcon();    // setMode(mode === 'chatList' ? 'contacts' : 'chatList');  //  ?   4
-    //     }
-    // }
-    const hadnleKeyDown = useCallback(                  //  6
+    function handleMenubarIcon() {
+        setMode(mode === 'chatList' ? 'contacts' : 'chatList');
+        dispatch(keywordSearched(''))
+    }
+
+    const hadnleKeyDown = useCallback(
         (e) => {
             if (mode !== 'search' && e.ctrlKey && (e.key === 'f' || e.key === 'F')) {
                 e.preventDefault();
-                handleSeachIcon();  // setMode('search');       //  ?   4
+                setMode('search');      //      6   handleSeachIcon()
             }
-            else if (mode === 'search' && e.keyCode === 27) {
-                handleMenubarIcon();    // setMode(mode === 'chatList' ? 'contacts' : 'chatList');  //  ?   4
+            else if (mode === 'chatList' && e.ctrlKey && (e.key === 'm' || e.key === 'M')) {
+                e.preventDefault();
+                setMode('contacts');
+            }
+            else if (e.keyCode === 27) {
+                setMode('chatList');    //      6   handleMenubarIcon()
+                dispatch(keywordSearched(''))             //      6
             }
         },
-        [mode, handleMenubarIcon],
+        [mode],
     );
     useKeyboard('keydown', hadnleKeyDown, [mode])
 
     return (
         <div className={styles['head']}>
+            <Drawer isOpen={mode === 'contacts'} onClose={handleMenubarIcon} >
+                <Profile
+                    name={name}
+                    avatar='/avatar.png'
+                    contacts={contacts}
+                />
+            </Drawer>
             <Headbar
                 first={
                     <FontAwesomeIcon
@@ -69,7 +76,7 @@ export default function Head({ onKeywordChange }) {
                         <input
                             type="text"
                             placeholder='search'
-                            // value={text}         //  5
+                            value={searchedKeyword}
                             ref={input}
                             onChange={handleInputChange}
                         /> :

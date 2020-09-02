@@ -1,0 +1,32 @@
+@import '../constants/constants.scss';
+
+.drawer {
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(1, 1, 1, 0.5);
+
+    &.open {
+        display: block;
+    }
+    &.close {
+        display: none;
+    }
+}
+.container {
+    position: absolute;
+    top: 0;
+    height: calc(100vh - #{$margin-top}* 2);
+    margin-top: $margin-top;
+    transition: width 0.5s ease-in-out;
+    background-color: #fff;
+
+    &.open {
+        width: 35%;
+    }
+    &.close {
+        width: 0;
+        overflow-x: hidden;
+    }
+}
