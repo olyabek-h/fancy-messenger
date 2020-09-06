@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './login.module.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSignInAlt } from '@fortawesome/free-solid-svg-icons'
-import { useKeyboard } from '../hooks/customHooks'
 import { signIn } from '../services/services'
 import { useDispatch } from '../context/dispatchContext'
 import { useAppState } from '../context/appStateContext'
@@ -40,7 +39,7 @@ export default function Login() {
     useEffect(() => {
         if (userId)
             history.push('/chat');
-    }, [userId])
+    }, [userId, history])
 
 
     return (

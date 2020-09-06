@@ -29,18 +29,32 @@ const ACTION_HANDLERS = {
     [ACTIONS.CHAT_BOX_CLOSED]: handleChatBoxClosed,
     [ACTIONS.KEYWORD_SEARCHED]: handleKeywordSearched,
     [ACTIONS.USER_SIGNED_IN]: handleUserSignedIn,
-    [ACTIONS.CONTACTS_LOADED]: handleContactsLoaded,
-    [ACTIONS.CHAT_LIST_LOADED]: handleChatListLoaded,
+    // [ACTIONS.CONTACTS_LOADED]: handleContactsLoaded,
+    // [ACTIONS.CHAT_LIST_LOADED]: handleChatListLoaded,
+    [ACTIONS.INIT_DATA_LOADED]: handleInitDataLoaded,
+    [ACTIONS.CHAT_CREATED]: handleChatCreated,
 }
 
-function handleChatSelected(state, payload) {
-    const selectedChatIndex = state.chatList.findIndex(chat => chat.id === payload);
-    const modifiedSelectedChat = { ...state.chatList[selectedChatIndex], unreadMessageCount: 0 };
+function handleChatSelected(state, { chatId, data }) {
+    const selectedChatIndex = state.chatList.findIndex(chat => chat.id === chatId);
+    const modifiedSelectedChat = { ...state.chatList[selectedChatIndex], unreadMessageCount: 0 };   //  9   shalow
     return {
         ...state,
-        selectedChatId: payload,
+        selectedChatId: chatId,
         chatlist: [
             ...state.chatList.splice(selectedChatIndex, 1, modifiedSelectedChat)
+        ],
+        messages: [
+            ...state.messages,
+            ...data.messages.map(msg =>
+                ({
+                    id: msg.id,
+                    chatId,
+                    userId: msg.userId,
+                    time: msg.date,
+                    text: msg.content,
+                })
+            )
         ],
     }
 }
@@ -55,7 +69,7 @@ function handleMessageSubmitted(state, payload) {
                 chatId: state.selectedChatId,
                 userId: state.userId,
                 time: Date.now(),
-                text: payload
+                text: payload.message
             }
         ]
     }
@@ -83,16 +97,43 @@ function handleUserSignedIn(state, payload) {
     }
 }
 
-function handleContactsLoaded(state, payload) {
+// function handleContactsLoaded(state, payload) {
+//     return {
+//         ...state,
+//         contacts: payload.filter(contact => contact.id !== state.userId),
+//     }
+// }
+
+// function handleChatListLoaded(state, payload) {
+//     return {
+//         ...state,
+//         chatList: payload
+//     }
+// }
+
+function handleInitDataLoaded(state, payload) {
     return {
         ...state,
-        contacts: payload,
+        chatList: payload.chatList.map(chat => ({ ...chat, avatar: '/avatar.png' })),
+        contacts: payload.contacts.filter(contact => contact.id !== state.userId),
     }
 }
 
-function handleChatListLoaded(state, payload) {
+function handleChatCreated(state, { chatId, name }) {
+    let newChatList = state.chatList;       //  9       let newChatlist = [...state].chatList
+    if (!state.chatList.some(chat => chat.id === chatId)) {
+        const newChat = {
+            id: chatId,
+            name,
+            avatar: '/avatar.png',
+            unreadMessageCount: 0,
+            time: ''
+        }
+        newChatList = [newChat, ...state.chatList]
+    }
     return {
         ...state,
-        chatList: payload
+        selectedChatId: chatId,
+        chatList: newChatList,
     }
 }

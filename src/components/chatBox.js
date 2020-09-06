@@ -43,11 +43,11 @@ export default function ChatBox({ avatar, name, messages, onSubmitMessage, selec
 
     useEffect(() => {
         input.current.focus();
-        lastMessage.current.scrollIntoView();
+        lastMessage.current && lastMessage.current.scrollIntoView();
     }, [selectedChatId])
 
     useEffect(() => {
-        lastMessage.current.scrollIntoView();
+        lastMessage.current && lastMessage.current.scrollIntoView();
     }, [messages])
 
     return (

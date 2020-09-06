@@ -2,7 +2,7 @@ import React from 'react'
 import styles from './profile.module.scss'
 import Avatar from './avatar'
 
-export default function Profile({ name, avatar, contacts, onSelect }) {
+export default function Profile({ name, avatar, contacts, onContactSelect }) {
 
     return (
         <div className={styles['profile']} >
@@ -12,7 +12,7 @@ export default function Profile({ name, avatar, contacts, onSelect }) {
             </div>
             <div className={styles['bottom']} >
                 <div>
-                    {contacts.map(contact => <div key={contact.id} onClick={() => onSelect(contact.id)} >{contact.name}</div>)}
+                    {contacts.map(contact => <div key={contact.id} onClick={() => onContactSelect(contact)} >{contact.name}</div>)}
                 </div>
             </div>
         </div>

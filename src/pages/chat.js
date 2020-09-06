@@ -4,24 +4,30 @@ import Head from '../components/head'
 import ChatList from '../components/chatList'
 import ChatItem from '../components/chatItem'
 import ChatBox from '../components/chatBox'
-import { chatSelected, messageSubmitted, chatBoxClosed, contactsLoaded, chatListLoaded } from '../stateManager/actionCreator'
+import { chatSelected, messageSubmitted, chatBoxClosed, initDataLoaded } from '../stateManager/actionCreator'
 import { useAppState } from '../context/appStateContext'
 import { useDispatch } from '../context/dispatchContext'
-import { loadContacts, loadRecentChats } from '../services/services'
+import { loadContacts, loadRecentChats, loadMessages, submitMessage } from '../services/services'
 
 export default function Chat() {
-  const { userId, chatList, messages, selectedChatId, searchedKeyword, contacts } = useAppState();
+  const { userId, chatList, messages, selectedChatId, searchedKeyword } = useAppState();
   const dispatch = useDispatch();
 
   const selectedChatInfo = chatList.filter(chat => chat.id === selectedChatId)[0];
   const selectedChatMessages = messages.filter(x => x.chatId === selectedChatId);
 
-  function handleChatSelect(id) {
-    dispatch(chatSelected(id));
+  function handleChatSelect(chatId) {
+    loadMessages(chatId, userId)
+      .then(data => {
+        dispatch(chatSelected(chatId, data));
+      })
   }
 
-  function handleSubmitMessage(text) {
-    dispatch(messageSubmitted(text));
+  function handleSubmitMessage(message) {
+    submitMessage(selectedChatId, userId, message)
+      .then(messageId => {
+        dispatch(messageSubmitted(message, messageId));
+      })
   }
 
   function handleCloseChatBox() {
@@ -30,16 +36,19 @@ export default function Chat() {
 
   useEffect(
     () => {
-      loadContacts(userId)
-        .then(data => {
-          dispatch(contactsLoaded(data))
+      Promise.all([
+        loadContacts(userId),
+        loadRecentChats(userId),
+      ])
+        .then(([contacts, chatList]) => {
+          dispatch(initDataLoaded(
+            {
+              contacts,
+              chatList,
+            }
+          ))
         })
-
-      loadRecentChats(userId)
-        .then(data => {
-          dispatch(chatListLoaded(data))
-        })
-    }, [userId]
+    }, [userId, dispatch]
   )
 
   return (
@@ -55,12 +64,13 @@ export default function Chat() {
               .map(chat => {
                 const chatMessages = messages.filter(x => x.chatId === chat.id);
                 const lastMessage = chatMessages[chatMessages.length - 1];
-                return <ChatItem key={chat.id}
+                return <ChatItem
+                  key={chat.id}
                   name={chat.name}
                   avatar={chat.avatar}
                   unreadMessageCount={chat.unreadMessageCount}
-                  lastMessage={lastMessage.text}
-                  time={lastMessage.time}
+                  lastMessage={lastMessage ? lastMessage.text : ''}
+                  time={lastMessage ? lastMessage.time : ''}
                   selected={chat.id === selectedChatId}
                   onSelect={() => handleChatSelect(chat.id)}
                 />

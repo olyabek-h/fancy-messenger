@@ -8,12 +8,13 @@ import Drawer from './drawer'
 import Profile from './profile'
 import { useAppState } from '../context/appStateContext'
 import { useDispatch } from '../context/dispatchContext'
-import { keywordSearched } from '../stateManager/actionCreator'
+import { keywordSearched, chatCreated } from '../stateManager/actionCreator'
+import { startChat } from '../services/services'
 
 export default function Head() {
     const [mode, setMode] = useState('chatList');
     const input = useRef(null);
-    const { name, searchedKeyword, contacts } = useAppState();
+    const { name, searchedKeyword, contacts, userId } = useAppState();
     const dispatch = useDispatch();
 
     function handleSeachIcon() {
@@ -49,9 +50,17 @@ export default function Head() {
                 dispatch(keywordSearched(''))             //      6
             }
         },
-        [mode],
+        [mode, dispatch],
     );
     useKeyboard('keydown', hadnleKeyDown, [mode])
+
+    function handleContactSelect({ id: peerId, name }) {
+        startChat(peerId, userId)
+            .then(chatId => {                
+                setMode('chatList')
+                dispatch(chatCreated(chatId, name))
+            })
+    }
 
     return (
         <div className={styles['head']}>
@@ -60,6 +69,7 @@ export default function Head() {
                     name={name}
                     avatar='/avatar.png'
                     contacts={contacts}
+                    onContactSelect={handleContactSelect}
                 />
             </Drawer>
             <Headbar
