@@ -33,6 +33,7 @@ const ACTION_HANDLERS = {
     // [ACTIONS.CHAT_LIST_LOADED]: handleChatListLoaded,
     [ACTIONS.INIT_DATA_LOADED]: handleInitDataLoaded,
     [ACTIONS.CHAT_CREATED]: handleChatCreated,
+    [ACTIONS.LOAD_PREPEND_MESSAGES]: handleLoadPrependMessages,
 }
 
 function handleChatSelected(state, { chatId, data }) {
@@ -135,5 +136,23 @@ function handleChatCreated(state, { chatId, name }) {
         ...state,
         selectedChatId: chatId,
         chatList: newChatList,
+    }
+}
+
+function handleLoadPrependMessages(state, { chatId, data }) {
+    return {
+        ...state,
+        messages: [
+            ...data.messages.map(msg =>
+                ({
+                    id: msg.id,
+                    chatId,
+                    userId: msg.userId,
+                    time: msg.date,
+                    text: msg.content,
+                })
+            ),
+            ...state.messages,
+        ],
     }
 }

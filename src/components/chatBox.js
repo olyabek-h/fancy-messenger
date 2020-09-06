@@ -5,11 +5,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faEllipsisV, faPaperclip, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import Avatar from './avatar'
 import { useKeyboard } from '../hooks/customHooks'
+import { loadMessages } from '../services/services'
+import { useDispatch } from '../context/dispatchContext'
+import { useAppState } from '../context/appStateContext'
+import { loadPrependMessages } from '../stateManager/actionCreator'
 
 export default function ChatBox({ avatar, name, messages, onSubmitMessage, selectedChatId, onClose }) {
     const [text, setText] = useState('');
     const input = useRef(null);
     const lastMessage = useRef(null);
+    const messagesContainer = useRef(null);
+    const dispatch = useDispatch();
+    const { userId } = useAppState();
+    const lastTextMessage = useRef('');
 
     function handleInputChange(e) {
         setText(e.target.value);
@@ -20,6 +28,7 @@ export default function ChatBox({ avatar, name, messages, onSubmitMessage, selec
             onSubmitMessage(text);
             setText('');
             input.current.focus();
+            lastTextMessage.current = text;
         }
     }
 
@@ -47,8 +56,25 @@ export default function ChatBox({ avatar, name, messages, onSubmitMessage, selec
     }, [selectedChatId])
 
     useEffect(() => {
-        lastMessage.current && lastMessage.current.scrollIntoView();
+        if (lastMessage.current && messages.length > 0)
+            if (messages[messages.length - 1].text === lastTextMessage.current)
+                lastMessage.current.scrollIntoView();
     }, [messages])
+
+    useEffect(() => {
+        function handleScrollTop() {
+            if (messagesContainer.current.scrollTop === 0) {
+                loadMessages(selectedChatId, userId, messages[messages.length - 1].id)
+                    .then(data => {
+                        dispatch(loadPrependMessages(selectedChatId, data));
+                    })
+            }
+        }
+        messagesContainer.current.addEventListener('scroll', handleScrollTop);
+        return () => {
+            messagesContainer.current.removeEventListener('scroll', handleScrollTop);
+        }
+    }, [selectedChatId, messages, dispatch, userId])
 
     return (
         <div className={styles['chatBox']}>
@@ -69,7 +95,7 @@ export default function ChatBox({ avatar, name, messages, onSubmitMessage, selec
                 />
             </div>
             <div className={styles['chatBody']}>
-                <ul className={styles['messages']}>
+                <ul className={styles['messages']} ref={messagesContainer} >
                     {messages.map((message, index) => (
                         <li
                             className={styles[message.me ? 'me' : '']}
