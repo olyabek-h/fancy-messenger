@@ -16,7 +16,9 @@ export const INIT_STATE = {
     ],
     selectedChatId: null,
     searchedKeyword: '',
-    contacts: [],
+    contacts: [
+        // {id: 1, name: 'Hossein'}
+    ],
 }
 
 export function reducer(state, action) {
@@ -34,6 +36,7 @@ const ACTION_HANDLERS = {
     [ACTIONS.INIT_DATA_LOADED]: handleInitDataLoaded,
     [ACTIONS.CHAT_CREATED]: handleChatCreated,
     [ACTIONS.LOAD_PREPEND_MESSAGES]: handleLoadPrependMessages,
+    [ACTIONS.NEW_USER_REGISTERED]: handleNewUserRegistered,
 }
 
 function handleChatSelected(state, { chatId, data }) {
@@ -154,5 +157,15 @@ function handleLoadPrependMessages(state, { chatId, data }) {
             ),
             ...state.messages,
         ],
+    }
+}
+
+function handleNewUserRegistered(state, payload) {
+    return {
+        ...state,
+        contacts: [
+            payload,
+            ...state.contacts,
+        ]
     }
 }

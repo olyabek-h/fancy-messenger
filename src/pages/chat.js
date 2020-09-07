@@ -4,10 +4,12 @@ import Head from '../components/head'
 import ChatList from '../components/chatList'
 import ChatItem from '../components/chatItem'
 import ChatBox from '../components/chatBox'
-import { chatSelected, messageSubmitted, chatBoxClosed, initDataLoaded } from '../stateManager/actionCreator'
+import { chatSelected, messageSubmitted, chatBoxClosed, initDataLoaded, newUserRegistered } from '../stateManager/actionCreator'
 import { useAppState } from '../context/appStateContext'
 import { useDispatch } from '../context/dispatchContext'
 import { loadContacts, loadRecentChats, loadMessages, submitMessage } from '../services/services'
+import io from 'socket.io-client'
+import { baseUrl } from '../utility/request'
 
 export default function Chat() {
   const { userId, chatList, messages, selectedChatId, searchedKeyword } = useAppState();
@@ -50,6 +52,14 @@ export default function Chat() {
         })
     }, [userId, dispatch]
   )
+
+  useEffect(() => {
+    const socket = io(baseUrl);
+    socket.emit('online', userId);
+    socket.on('new-user', user => {
+      dispatch(newUserRegistered(user));
+    })
+  }, [])
 
   return (
     <div className={styles['layout']}>
