@@ -9,6 +9,7 @@ import { loadMessages } from '../services/services'
 import { useDispatch } from '../context/dispatchContext'
 import { useAppState } from '../context/appStateContext'
 import { loadPrependMessages } from '../stateManager/actionCreator'
+import TextMessage from './textMessage'
 
 export default function ChatBox({ avatar, name, messages, onSubmitMessage, selectedChatId, onClose }) {
     const [text, setText] = useState('');
@@ -70,9 +71,10 @@ export default function ChatBox({ avatar, name, messages, onSubmitMessage, selec
                     })
             }
         }
-        messagesContainer.current.addEventListener('scroll', handleScrollTop);
+        const msgContainer = messagesContainer.current;
+        msgContainer.addEventListener('scroll', handleScrollTop);
         return () => {
-            messagesContainer.current.removeEventListener('scroll', handleScrollTop);
+            msgContainer.removeEventListener('scroll', handleScrollTop);
         }
     }, [selectedChatId, messages, dispatch, userId])
 
@@ -97,14 +99,19 @@ export default function ChatBox({ avatar, name, messages, onSubmitMessage, selec
             <div className={styles['chatBody']}>
                 <ul className={styles['messages']} ref={messagesContainer} >
                     {messages.map((message, index) => (
-                        <li
-                            className={styles[message.me ? 'me' : '']}
+                        <TextMessage
                             key={message.id}
                             ref={messages.length === index + 1 ? lastMessage : null}
-                        >
-                            <span>{message.text}</span>
-                            <span>{message.time}</span>
-                        </li>
+                            message={message}
+                        />
+                        // <li
+                        //     className={styles[message.me ? 'me' : '']}
+                        //     key={message.id}
+                        //     ref={messages.length === index + 1 ? lastMessage : null}
+                        // >
+                        //     <span>{message.text}</span>
+                        //     <span>{message.time}</span>
+                        // </li>
                     ))}
                 </ul>
                 <div className={styles['chatInput']}>

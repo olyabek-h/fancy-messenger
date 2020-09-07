@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import styles from './chat.module.scss'
 import Head from '../components/head'
 import ChatList from '../components/chatList'
 import ChatItem from '../components/chatItem'
 import ChatBox from '../components/chatBox'
-import { chatSelected, messageSubmitted, chatBoxClosed, initDataLoaded, newUserRegistered } from '../stateManager/actionCreator'
+import { chatSelected, chatBoxClosed, initDataLoaded, newUserRegistered, newMessageRecieved } from '../stateManager/actionCreator'
 import { useAppState } from '../context/appStateContext'
 import { useDispatch } from '../context/dispatchContext'
 import { loadContacts, loadRecentChats, loadMessages, submitMessage } from '../services/services'
@@ -15,10 +15,17 @@ export default function Chat() {
   const { userId, chatList, messages, selectedChatId, searchedKeyword } = useAppState();
   const dispatch = useDispatch();
 
-  const selectedChatInfo = chatList.filter(chat => chat.id === selectedChatId)[0];
-  const selectedChatMessages = messages.filter(x => x.chatId === selectedChatId);
+  const selectedChatInfo = useMemo(
+    () => chatList.filter(chat => chat.id === selectedChatId)[0],
+    [chatList, selectedChatId])
+  const selectedChatMessages = useMemo(
+    () => messages.filter(x => x.chatId === selectedChatId),
+    [messages, selectedChatId])
 
   function handleChatSelect(chatId) {
+    if (chatId === selectedChatId) {
+      return;
+    }
     loadMessages(chatId, userId)
       .then(data => {
         dispatch(chatSelected(chatId, data));
@@ -26,10 +33,7 @@ export default function Chat() {
   }
 
   function handleSubmitMessage(message) {
-    submitMessage(selectedChatId, userId, message)
-      .then(messageId => {
-        dispatch(messageSubmitted(message, messageId));
-      })
+    submitMessage(selectedChatId, userId, message);
   }
 
   function handleCloseChatBox() {
@@ -56,10 +60,15 @@ export default function Chat() {
   useEffect(() => {
     const socket = io(baseUrl);
     socket.emit('online', userId);
+
     socket.on('new-user', user => {
       dispatch(newUserRegistered(user));
     })
-  }, [])
+
+    socket.on('new-message', data => {
+      dispatch(newMessageRecieved(data));
+    })
+  }, [dispatch, userId])                    //          10
 
   return (
     <div className={styles['layout']}>

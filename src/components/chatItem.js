@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './chatItem.module.scss'
 import Avatar from './avatar'
+import moment from 'moment'
 
 export default function ChatItem({ name, avatar, lastMessage, time, unreadMessageCount, selected, onSelect }) {
 
@@ -10,7 +11,7 @@ export default function ChatItem({ name, avatar, lastMessage, time, unreadMessag
                 <Avatar src={avatar} alt={name} />
             </div>
             <span className={styles['name']}>{name}</span>
-            <span className={styles['time']}>{time}</span>
+            <span className={styles['time']}>{time && moment(time).format('hh:mm')}</span>
             <span className={styles['lastMessage']}>{lastMessage}</span>
             {!!unreadMessageCount && <span className={styles['unreadMessageCount']}>{unreadMessageCount}</span>}
         </div>

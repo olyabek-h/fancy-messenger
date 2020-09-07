@@ -27,7 +27,7 @@ export function reducer(state, action) {
 
 const ACTION_HANDLERS = {
     [ACTIONS.CHAT_SELECTED]: handleChatSelected,
-    [ACTIONS.MESSAGE_SUBMITTED]: handleMessageSubmitted,
+    // [ACTIONS.MESSAGE_SUBMITTED]: handleMessageSubmitted,
     [ACTIONS.CHAT_BOX_CLOSED]: handleChatBoxClosed,
     [ACTIONS.KEYWORD_SEARCHED]: handleKeywordSearched,
     [ACTIONS.USER_SIGNED_IN]: handleUserSignedIn,
@@ -37,6 +37,7 @@ const ACTION_HANDLERS = {
     [ACTIONS.CHAT_CREATED]: handleChatCreated,
     [ACTIONS.LOAD_PREPEND_MESSAGES]: handleLoadPrependMessages,
     [ACTIONS.NEW_USER_REGISTERED]: handleNewUserRegistered,
+    [ACTIONS.NEW_MESSAGE_RECIEVED]: handleNewMessageRecieved,
 }
 
 function handleChatSelected(state, { chatId, data }) {
@@ -49,7 +50,7 @@ function handleChatSelected(state, { chatId, data }) {
             ...state.chatList.splice(selectedChatIndex, 1, modifiedSelectedChat)
         ],
         messages: [
-            ...state.messages,
+            ...state.messages.filter(msg => msg.chatId !== chatId),
             ...data.messages.map(msg =>
                 ({
                     id: msg.id,
@@ -63,21 +64,21 @@ function handleChatSelected(state, { chatId, data }) {
     }
 }
 
-function handleMessageSubmitted(state, payload) {
-    return {
-        ...state,
-        messages: [
-            ...state.messages,
-            {
-                id: Math.random(),
-                chatId: state.selectedChatId,
-                userId: state.userId,
-                time: Date.now(),
-                text: payload.message
-            }
-        ]
-    }
-}
+// function handleMessageSubmitted(state, payload) {
+//     return {
+//         ...state,
+//         messages: [
+//             ...state.messages,
+//             {
+//                 id: Math.random(),
+//                 chatId: state.selectedChatId,
+//                 userId: state.userId,
+//                 time: Date.now(),
+//                 text: payload.message
+//             }
+//         ]
+//     }
+// }
 
 function handleChatBoxClosed(state) {
     return {
@@ -115,16 +116,29 @@ function handleUserSignedIn(state, payload) {
 //     }
 // }
 
-function handleInitDataLoaded(state, payload) {
+function handleInitDataLoaded(state, { chatList, contacts }) {
+    const newMessages = [...state.messages];
+    chatList.forEach(chat => {
+        if (chat.lastMessage) {
+            newMessages.push({
+                id: chat.lastMessage.id,
+                chatId: chat.id,
+                userId: chat.lastMessage.userId,
+                time: chat.lastMessage.date,
+                text: chat.lastMessage.content,
+            })
+        }
+    });
     return {
         ...state,
-        chatList: payload.chatList.map(chat => ({ ...chat, avatar: '/avatar.png' })),
-        contacts: payload.contacts.filter(contact => contact.id !== state.userId),
+        chatList: chatList.map(chat => ({ ...chat, avatar: '/avatar.png' })),
+        contacts: contacts.filter(contact => contact.id !== state.userId),
+        messages: newMessages,
     }
 }
 
 function handleChatCreated(state, { chatId, name }) {
-    let newChatList = state.chatList;       //  9       let newChatlist = [...state].chatList
+    let newChatList = state.chatList;       //  9       let newChatlist = [...state.chatList]
     if (!state.chatList.some(chat => chat.id === chatId)) {
         const newChat = {
             id: chatId,
@@ -166,6 +180,46 @@ function handleNewUserRegistered(state, payload) {
         contacts: [
             payload,
             ...state.contacts,
+        ]
+    }
+}
+
+function handleNewMessageRecieved(state, { chatId, message }) {
+    const newChatList = [...state.chatList];
+    if (!state.chatList.some(chat => chat.id === chatId)) {
+        const newChat = {
+            id: chatId,
+            name: state.contacts.find(contact => contact.id === message.userId).name,
+            avatar: '/avatar.png',
+            unreadMessageCount: 1,
+            time: message.date
+        }
+        newChatList.unshift(newChat);        
+    }
+    else if (state.selectedChatId !== chatId) {
+        const chatIndex = state.chatList.findIndex(chat => chat.id === chatId);
+        const updatedChat = {
+            ...state.chatList[chatIndex],
+            unreadMessageCount: state.chatList[chatIndex].unreadMessageCount + 1,
+        }
+        newChatList.splice(chatIndex, 1);
+        newChatList.unshift(updatedChat);
+    }
+
+    const newMessage = {
+        id: message.id,
+        chatId,
+        userId: message.userId,
+        time: message.date,
+        text: message.content
+    }
+
+    return {
+        ...state,
+        chatList: newChatList,
+        messages: [
+            ...state.messages,
+            newMessage
         ]
     }
 }
