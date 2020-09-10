@@ -11,6 +11,7 @@ export const ACTIONS = {
     LOAD_PREPEND_MESSAGES: 'LOAD_PREPEND_MESSAGES',
     NEW_USER_REGISTERED: 'NEW_USER_REGISTERED',
     NEW_MESSAGE_RECIEVED: 'NEW_MESSAGE_RECIEVED',
+    USER_SIGNED_OUT: 'USER_SIGNED_OUT',
 }
 
 // export const chatSelected = id => ({ type: ACTIONS.CHAT_SELECTED, payload: id })
@@ -26,3 +27,4 @@ export const chatCreated = (chatId, name) => ({ type: ACTIONS.CHAT_CREATED, payl
 export const loadPrependMessages = (chatId, data) => ({ type: ACTIONS.LOAD_PREPEND_MESSAGES, payload: { chatId, data } })
 export const newUserRegistered = user => ({ type: ACTIONS.NEW_USER_REGISTERED, payload: user })
 export const newMessageRecieved = data => ({ type: ACTIONS.NEW_MESSAGE_RECIEVED, payload: data })
+export const userSignedOut = () => ({ type: ACTIONS.USER_SIGNED_OUT })

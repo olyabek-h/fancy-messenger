@@ -38,6 +38,7 @@ const ACTION_HANDLERS = {
     [ACTIONS.LOAD_PREPEND_MESSAGES]: handleLoadPrependMessages,
     [ACTIONS.NEW_USER_REGISTERED]: handleNewUserRegistered,
     [ACTIONS.NEW_MESSAGE_RECIEVED]: handleNewMessageRecieved,
+    [ACTIONS.USER_SIGNED_OUT]: handleUserSignedOut,
 }
 
 function handleChatSelected(state, { chatId, data }) {
@@ -194,7 +195,7 @@ function handleNewMessageRecieved(state, { chatId, message }) {
             unreadMessageCount: 1,
             time: message.date
         }
-        newChatList.unshift(newChat);        
+        newChatList.unshift(newChat);
     }
     else if (state.selectedChatId !== chatId) {
         const chatIndex = state.chatList.findIndex(chat => chat.id === chatId);
@@ -222,4 +223,8 @@ function handleNewMessageRecieved(state, { chatId, message }) {
             newMessage
         ]
     }
+}
+
+function handleUserSignedOut() {
+    return INIT_STATE;
 }

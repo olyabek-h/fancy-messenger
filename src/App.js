@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import { AppStateProvider } from './context/appStateContext'
 import { DispatchProvider } from './context/dispatchContext'
 import { INIT_STATE, reducer } from './stateManager/reducer'
@@ -7,10 +7,23 @@ import { ROUTES } from './routes/routes'
 import MainLayout from './layout/mainLayout'
 import SecondaryLayout from './layout/secondaryLayout'
 import Inaccessibility from './pages/inaccessibility'
+import { userSignedIn } from './stateManager/actionCreator'
 
 function App() {
   const [state, dispatch] = useReducer(reducer, INIT_STATE)
   const isAuthenticated = state.userId !== null;
+
+  useEffect(
+    () => {
+      if (localStorage.getItem('userId')) {
+        const user = {
+          id: localStorage.getItem('userId'),
+          name: localStorage.getItem('username')
+        }
+        dispatch(userSignedIn(user));
+      }
+    }, []
+  )
 
   return (
     <DispatchProvider dispatch={dispatch}>

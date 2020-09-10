@@ -8,7 +8,7 @@ import Drawer from './drawer'
 import Profile from './profile'
 import { useAppState } from '../context/appStateContext'
 import { useDispatch } from '../context/dispatchContext'
-import { keywordSearched, chatCreated } from '../stateManager/actionCreator'
+import { keywordSearched, chatCreated, userSignedOut } from '../stateManager/actionCreator'
 import { startChat } from '../services/services'
 
 export default function Head() {
@@ -56,10 +56,15 @@ export default function Head() {
 
     function handleContactSelect({ id: peerId, name }) {
         startChat(peerId, userId)
-            .then(chatId => {                
+            .then(chatId => {
                 setMode('chatList')
                 dispatch(chatCreated(chatId, name))
             })
+    }
+
+    function handleOnExit() {
+        dispatch(userSignedOut());
+        localStorage.clear();
     }
 
     return (
@@ -70,6 +75,7 @@ export default function Head() {
                     avatar='/avatar.png'
                     contacts={contacts}
                     onContactSelect={handleContactSelect}
+                    onExit={handleOnExit}
                 />
             </Drawer>
             <Headbar

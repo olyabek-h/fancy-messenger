@@ -25,8 +25,11 @@ export default function Login() {
             signIn(username)
                 .then(({ success, result: user }) => {
                     //  TODO: handle failure.
-                    if (success)
+                    if (success) {
+                        localStorage.setItem('userId', user.id);
+                        localStorage.setItem('username', user.name);
                         dispatch(userSignedIn(user));
+                    }
                 })
         }
     }
@@ -40,7 +43,6 @@ export default function Login() {
         if (userId)
             history.push('/chat');
     }, [userId, history])
-
 
     return (
         <div className={styles['layout']}>
