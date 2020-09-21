@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './chatItem.module.scss'
-import Avatar from './avatar'
+import Avatar from '../../../components/avatar'
 import moment from 'moment'
 
 export default function ChatItem({ name, avatar, lastMessage, time, unreadMessageCount, selected, onSelect }) {

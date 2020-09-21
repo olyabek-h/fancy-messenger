@@ -3,7 +3,7 @@ import styles from './inaccessibility.module.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserLock } from '@fortawesome/free-solid-svg-icons'
 import { Route, Link } from 'react-router-dom'
-import { useKeyboard } from '../hooks/customHooks'
+import { useKeyboard } from '../../hooks/customHooks'
 import { useHistory } from 'react-router-dom'
 
 export default function Inaccessibility() {

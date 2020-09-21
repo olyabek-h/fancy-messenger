@@ -1,5 +1,5 @@
-import Login from '../pages/login'
-import Chat from '../pages/chat'
+import Login from '../pages/login/login'
+import Chat from '../pages/chat/chat'
 
 export const ROUTES = [
     {

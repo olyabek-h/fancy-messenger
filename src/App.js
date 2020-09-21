@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import { ROUTES } from './routes/routes'
 import MainLayout from './layout/mainLayout'
 import SecondaryLayout from './layout/secondaryLayout'
-import Inaccessibility from './pages/inaccessibility'
+import Inaccessibility from './pages/inaccessibility/inaccessibility'
 import { userSignedIn } from './stateManager/actionCreator'
 import useThunkReducer from 'react-hook-thunk-reducer';
 

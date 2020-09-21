@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import styles from './head.module.scss'
-import Headbar from '../components/headbar'
+import Headbar from './headbar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars, faSearch, faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-import { useKeyboard } from '../hooks/customHooks'
-import Drawer from './drawer'
-import Profile from './profile'
-import { useAppState } from '../context/appStateContext'
-import { useDispatch } from '../context/dispatchContext'
-import { keywordSearched, chatCreated, userSignedOut } from '../stateManager/actionCreator'
-import { startChat } from '../services/services'
+import { useKeyboard } from '../../../hooks/customHooks'
+import Drawer from '../../../components/drawer'
+import Profile from '../../../components/profile'
+import { useAppState } from '../../../context/appStateContext'
+import { useDispatch } from '../../../context/dispatchContext'
+import { keywordSearched, chatCreated, userSignedOut } from '../../../stateManager/actionCreator'
+import { startChat } from '../../../services/services'
 
 export default function Head() {
     const [mode, setMode] = useState('chatList');
