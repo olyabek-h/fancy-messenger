@@ -19,6 +19,7 @@ export const INIT_STATE = {
     contacts: [
         // {id: 1, name: 'Hossein'}
     ],
+    loading: false,
 }
 
 export function reducer(state, action) {
@@ -39,6 +40,7 @@ const ACTION_HANDLERS = {
     [ACTIONS.NEW_USER_REGISTERED]: handleNewUserRegistered,
     [ACTIONS.NEW_MESSAGE_RECIEVED]: handleNewMessageRecieved,
     [ACTIONS.USER_SIGNED_OUT]: handleUserSignedOut,
+    [ACTIONS.LOADING]: handleLoading,
 }
 
 function handleChatSelected(state, { chatId, data }) {
@@ -135,6 +137,7 @@ function handleInitDataLoaded(state, { chatList, contacts }) {
         chatList: chatList.map(chat => ({ ...chat, avatar: '/avatar.png' })),
         contacts: contacts.filter(contact => contact.id !== state.userId),
         messages: newMessages,
+        loading: false,
     }
 }
 
@@ -187,7 +190,10 @@ function handleNewUserRegistered(state, payload) {
 
 function handleNewMessageRecieved(state, { chatId, message }) {
     const newChatList = [...state.chatList];
-    if (!state.chatList.some(chat => chat.id === chatId)) {
+    if (state.name === '') {
+        return (state)
+    }
+    else if (!state.chatList.some(chat => chat.id === chatId)) {
         const newChat = {
             id: chatId,
             name: state.contacts.find(contact => contact.id === message.userId).name,
@@ -227,4 +233,11 @@ function handleNewMessageRecieved(state, { chatId, message }) {
 
 function handleUserSignedOut() {
     return INIT_STATE;
+}
+
+function handleLoading(state) {
+    return {
+        ...state,
+        loading: true,
+    }
 }

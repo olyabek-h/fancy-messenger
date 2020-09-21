@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { AppStateProvider } from './context/appStateContext'
 import { DispatchProvider } from './context/dispatchContext'
 import { INIT_STATE, reducer } from './stateManager/reducer'
@@ -8,9 +8,10 @@ import MainLayout from './layout/mainLayout'
 import SecondaryLayout from './layout/secondaryLayout'
 import Inaccessibility from './pages/inaccessibility'
 import { userSignedIn } from './stateManager/actionCreator'
+import useThunkReducer from 'react-hook-thunk-reducer';
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, INIT_STATE)
+  const [state, dispatch] = useThunkReducer(reducer, INIT_STATE)
   const isAuthenticated = state.userId !== null;
 
   useEffect(
@@ -22,7 +23,7 @@ function App() {
         }
         dispatch(userSignedIn(user));
       }
-    }, []
+    }, [dispatch]
   )
 
   return (

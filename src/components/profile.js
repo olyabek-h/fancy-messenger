@@ -12,12 +12,12 @@ export default function Profile({ name, avatar, contacts, onContactSelect, onExi
                 <Avatar src={avatar} alt={`${name}'s avatar`} /> {/*Temporary hard code*/}
                 <span> {name} </span>
                 <div className={styles['icon']}>
-                    <FontAwesomeIcon icon={faSignOutAlt} size='small' onClick={onExit} />
+                    <FontAwesomeIcon icon={faSignOutAlt} size='sm' onClick={onExit} />
                 </div>
             </div>
             <div className={styles['bottom']} >
                 <div>
-                    {contacts.map(contact => <div key={contact.id} onClick={() => onContactSelect(contact)} >{contact.name}</div>)}
+                    {!!contacts.length && contacts.map(contact => <div key={contact.id} onClick={() => onContactSelect(contact)} >{contact.name}</div>)}
                 </div>
             </div>
         </div>

@@ -4,15 +4,16 @@ import Head from '../components/head'
 import ChatList from '../components/chatList'
 import ChatItem from '../components/chatItem'
 import ChatBox from '../components/chatBox'
-import { chatSelected, chatBoxClosed, initDataLoaded, newUserRegistered, newMessageRecieved } from '../stateManager/actionCreator'
+import { chatSelected, chatBoxClosed, newUserRegistered, newMessageRecieved, loadingInitData } from '../stateManager/actionCreator'
 import { useAppState } from '../context/appStateContext'
 import { useDispatch } from '../context/dispatchContext'
-import { loadContacts, loadRecentChats, loadMessages, submitMessage } from '../services/services'
+import { loadMessages, submitMessage } from '../services/services'
 import io from 'socket.io-client'
 import { baseUrl } from '../utility/request'
+import Loading from '../components/loading'
 
 export default function Chat() {
-  const { userId, chatList, messages, selectedChatId, searchedKeyword } = useAppState();
+  const { userId, chatList, messages, selectedChatId, searchedKeyword, loading } = useAppState();
   const dispatch = useDispatch();
 
   const selectedChatInfo = useMemo(
@@ -42,18 +43,7 @@ export default function Chat() {
 
   useEffect(
     () => {
-      Promise.all([
-        loadContacts(userId),
-        loadRecentChats(userId),
-      ])
-        .then(([contacts, chatList]) => {
-          dispatch(initDataLoaded(
-            {
-              contacts,
-              chatList,
-            }
-          ))
-        })
+      dispatch(loadingInitData(userId));
     }, [userId, dispatch]
   )
 
@@ -72,6 +62,7 @@ export default function Chat() {
 
   return (
     <div className={styles['layout']}>
+      <Loading loading={loading} />
       <div className={styles['side']}>
         <div className={styles['head']}>
           <Head />

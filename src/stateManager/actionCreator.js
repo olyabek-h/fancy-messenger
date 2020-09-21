@@ -1,3 +1,5 @@
+import { loadContacts, loadRecentChats } from '../services/services'
+
 export const ACTIONS = {
     CHAT_SELECTED: 'CHAT_SELECTED',
     // MESSAGE_SUBMITTED: 'MESSAGE_SUBMITTED',
@@ -12,6 +14,8 @@ export const ACTIONS = {
     NEW_USER_REGISTERED: 'NEW_USER_REGISTERED',
     NEW_MESSAGE_RECIEVED: 'NEW_MESSAGE_RECIEVED',
     USER_SIGNED_OUT: 'USER_SIGNED_OUT',
+    LOADING_INIT_DATA: 'LOADING_INIT_DATA',
+    LOADING: 'LOADING',
 }
 
 // export const chatSelected = id => ({ type: ACTIONS.CHAT_SELECTED, payload: id })
@@ -28,3 +32,22 @@ export const loadPrependMessages = (chatId, data) => ({ type: ACTIONS.LOAD_PREPE
 export const newUserRegistered = user => ({ type: ACTIONS.NEW_USER_REGISTERED, payload: user })
 export const newMessageRecieved = data => ({ type: ACTIONS.NEW_MESSAGE_RECIEVED, payload: data })
 export const userSignedOut = () => ({ type: ACTIONS.USER_SIGNED_OUT })
+export const loading = () => ({ type: ACTIONS.LOADING })
+
+export const loadingInitData = (userId) => {
+    return (dispatch) => {
+        dispatch(loading());
+        Promise.all([
+            loadContacts(userId),
+            loadRecentChats(userId),
+        ])
+            .then(([contacts, chatList]) => {
+                dispatch(initDataLoaded(
+                    {
+                        contacts,
+                        chatList,
+                    }
+                ))
+            });
+    }
+}

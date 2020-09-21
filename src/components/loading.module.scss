@@ -1,0 +1,13 @@
+@import '../constants/constants.scss';
+
+.loading {
+    div {
+        backdrop-filter: blur(10px);
+        // width: 100vw;
+        // height: 100vh;
+    }
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
